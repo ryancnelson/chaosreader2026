@@ -1,6 +1,16 @@
 # Chaosreader 2026
 
-Design notes and prototype workspace for a modern successor to Brendan Gregg's [Chaosreader](https://github.com/brendangregg/Chaosreader) (2003–2014)—preserving its core workflow (**one capture in → one static, browsable directory of reconstructed files, transcripts, and replays out**) while replacing its 2004-era L2–L7 assumptions for 2026 network traffic.
+Modern single-binary Rust successor to Brendan Gregg's [Chaosreader](https://github.com/brendangregg/Chaosreader) (2003–2014)—preserving its core workflow (**one capture in → one static, browsable directory of reconstructed files, transcripts, and replays out**) while replacing its 2004-era L2–L7 assumptions for 2026 network traffic.
+
+## Quick Start
+
+```sh
+# Run the test suite
+cargo test
+
+# Reconstruct sessions, transcripts, and index.html from a .pcap or .pcapng file
+cargo run -- path/to/capture.pcapng -o case_out
+```
 
 ## Documentation & Workflow
 

@@ -5,7 +5,7 @@
 **Project:** `chaosreader2026` (Rust)
 **Description:** Modern single-binary packet-capture object carver, conversational transcript compiler, and safe session-replay generator.
 
-**Last Updated:** 2026-11-09 (Iteration 0 - Initialization)
+**Last Updated:** 2026-11-09 (Iteration 1)
 
 ---
 
@@ -20,7 +20,6 @@
 
 ## Priority 1: High Impact, Small Scope (30-45 min)
 
-- [ ] **[FOCUS] [IDEA] Vertical tracer bullet: `pcap` + `pcapng` ingestion & session index CLI** — Decode legacy `pcap` (usec/nsec) and `pcapng` (`Ethernet`, `802.1Q VLAN`, `SLL`, `SLL2`, `DLT_NULL`, IPv4 & IPv6) with monotonic `(packet_index, timestamp_ns)` ordering (fixing Chaosreader's timestamp-collision bug) and emit `sessions.jsonl` + strict HTML-escaped `index.html`.
 - [ ] **[FOCUS] [IDEA] Overlap-trimmed TCP sequence reassembler & connection-lifecycle splitter** — Reassemble unidirectional (`client->server`, `server->client`) and time-ordered bidirectional streams handling out-of-order segments, partial-overlap retransmissions, 32-bit `seq` wraparound, and `SYN`/`FIN`/`RST` 4-tuple reuse.
 - [ ] **[FOCUS] [IDEA] Payload-first L7 protocol classifier (DPI over port numbers)** — Sniff initial stream bytes (`HTTP/1.`, HTTP/2 preface `PRI * HTTP/2.0`, TLS ClientHello, `SSH-`, Redis RESP, Postgres startup, MQTT `CONNECT`, WebSocket upgrade) instead of trusting `min(src_port, dst_port)`.
 - [ ] **[FOCUS] [IDEA] Content-Length & chunked HTTP/1.x object carver with magic-byte fallback** — Carve exact HTTP request/response bodies without regex stream-splitting bugs, decompress `gzip`/`deflate`/`br`/`zstd`, sniff magic headers (`png`, `jpeg`, `gif`, `webp`, `avif`, `pdf`, `zip`, `wasm`, `woff2`, `sqlite`, `parquet`), and emit SHA-256 deduplicated files + `image.html` gallery.
@@ -62,6 +61,9 @@
 
 Track completed items here to celebrate progress and inform strategic reviews.
 
+### Iteration 1 (2026-11-09)
+- [DONE] ✅ **Vertical tracer bullet: `pcap` + `pcapng` ingestion & session index CLI** — Implemented `ingest_capture_bytes` and `generate_case_dir` supporting microsecond/nanosecond `pcap` and `pcapng` (`EnhancedPacketBlock` + `SimplePacketBlock`) across `ETHERNET`, `802.1Q VLAN`, `LINUX_SLL`, `LINUX_SLL2`, `RAW`, and `NULL`/`LOOP` (`IPv4` + `IPv6`), preserving same-timestamp packet order and emitting `sessions.jsonl` + strict-CSP, HTML-escaped `index.html` and `session_NNNN.html` transcripts.
+
 ### Iteration 0 (2026-11-09)
 - [DONE] ✅ Initialized repository, upstream Chaosreader 2026 source review (`docs/chaosreader-2026-review.md`), public-safety git hooks, and `iterate-bot` + TDD + Gilfoyle scaffolding.
 
@@ -69,4 +71,4 @@ Track completed items here to celebrate progress and inform strategic reviews.
 
 ## Ideas Inbox (Unsorted)
 
-New ideas discovered mid-iteration go here instead of expanding current iteration scope.
+- [ ] **[IDEA] `LaxSlicedPacket` fallback for snaplen-cut frames** — When `data.len() < original_len` cuts mid-IP payload so IP `total_len` exceeds captured slice length, fall back to `etherparse::LaxSlicedPacket` so partial L4 headers and truncated bytes are still recovered and flagged `partial: true`.
