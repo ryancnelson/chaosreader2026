@@ -14,6 +14,7 @@ cargo run -- path/to/capture.pcapng -o case_out
 
 ## Documentation & Workflow
 
+- **[2026 Landscape & Positioning (`docs/2026-landscape-and-positioning.md`)](docs/2026-landscape-and-positioning.md)** — Comparison against `dreadl0ck/netcap`, `tshark`, `tcpflow`, `Zeek`, CTF stream viewers (`Tulip`, `pkappa2`, `Shovel`), and eBPF capture tools (`eCapture`, `ptcpdump`), defining what not to reinvent and the exact gap `chaosreader2026` targets.
 - **[Feature Backlog (`BACKLOG.md`)](BACKLOG.md)** — Prioritized single-iteration tasks (`the-iterate-bot` methodology).
 - **[Development & TDD Guide (`CLAUDE.md`)](CLAUDE.md)** — Strict `RED → GREEN → REFACTOR` TDD workflow, hypothesis-driven debugging discipline, and iteration scripts (`./scripts/next-iteration.sh`).
 - **[Strategic Review Checklist (`STRATEGIC-REVIEW-CHECKLIST.md`)](STRATEGIC-REVIEW-CHECKLIST.md)** — 8-iteration direction and health checkpoint.

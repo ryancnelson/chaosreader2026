@@ -5,7 +5,14 @@
 **Project:** `chaosreader2026` (Rust)
 **Description:** Modern single-binary packet-capture object carver, conversational transcript compiler, and safe session-replay generator.
 
-**Last Updated:** 2026-11-09 (Iteration 1)
+**Last Updated:** 2026-11-09 (Post-Iteration 1 Landscape Alignment)
+
+---
+
+## Strategic Positioning (from [`docs/2026-landscape-and-positioning.md`](docs/2026-landscape-and-positioning.md))
+
+- **Don't reinvent `libwireshark` or `dreadl0ck/netcap`:** Delegate heavy TLS 1.3 / `pcapng` `DSB` / HTTP/2 / QUIC decryption and complex stream reassembly to `tshark` when available on `PATH`, while keeping `[iter-1]`'s native Rust `pcap`/`pcapng` reader as a fast zero-dependency fallback.
+- **Own the unoccupied 2026 gap:** Zero-server portable static HTML + `sessions.sqlite` (FTS5) case bundles, **SSE (`text/event-stream`) / LLM / MCP & WebSocket** conversation reconstructors, **`206 Partial Content` range stitching** + `br`/`zstd` object carving, inline **asciinema `.cast` v2** replays, and Tulip-style **`curl` request reproducers**.
 
 ---
 
@@ -20,23 +27,23 @@
 
 ## Priority 1: High Impact, Small Scope (30-45 min)
 
-- [ ] **[FOCUS] [IDEA] Overlap-trimmed TCP sequence reassembler & connection-lifecycle splitter** — Reassemble unidirectional (`client->server`, `server->client`) and time-ordered bidirectional streams handling out-of-order segments, partial-overlap retransmissions, 32-bit `seq` wraparound, and `SYN`/`FIN`/`RST` 4-tuple reuse.
-- [ ] **[FOCUS] [IDEA] Payload-first L7 protocol classifier (DPI over port numbers)** — Sniff initial stream bytes (`HTTP/1.`, HTTP/2 preface `PRI * HTTP/2.0`, TLS ClientHello, `SSH-`, Redis RESP, Postgres startup, MQTT `CONNECT`, WebSocket upgrade) instead of trusting `min(src_port, dst_port)`.
-- [ ] **[FOCUS] [IDEA] Content-Length & chunked HTTP/1.x object carver with magic-byte fallback** — Carve exact HTTP request/response bodies without regex stream-splitting bugs, decompress `gzip`/`deflate`/`br`/`zstd`, sniff magic headers (`png`, `jpeg`, `gif`, `webp`, `avif`, `pdf`, `zip`, `wasm`, `woff2`, `sqlite`, `parquet`), and emit SHA-256 deduplicated files + `image.html` gallery.
-- [ ] **[FOCUS] [IDEA] Safe asciinema v2 (`.cast`) replay compiler & sandboxed HTML viewer** — Replace raw PTY-injecting Perl `.replay` scripts with `.cast` v2 recordings for interactive TCP/UDP text sessions (Telnet, IRC, Redis, SMTP) with sanitized control-sequence rendering in `index.html`.
-- [ ] **[IDEA] Passive hostname resolver (DNS `A`/`AAAA`/`CNAME` + mDNS + TLS `SNI`)** — Unroll CNAME chains from captured UDP/53 & mDNS 5353 packets plus plaintext TLS ClientHello `SNI` extensions to annotate IP endpoints across `index.html` and `sessions.jsonl` with zero live network queries.
-- [ ] **[IDEA] SSE (`text/event-stream`) & NDJSON stream transcript reconstructor** — Reassemble streamed HTTP responses (OpenAI/Anthropic/Gemini/Ollama/MCP event streams) into clean, human-readable prompt/tool-call/completion transcripts with inter-token latency stats.
-- [ ] **[IDEA] WebSocket frame unmasker & message timeline builder** — Detect HTTP `101 Switching Protocols` upgrades, unmask client->server frames, reassemble fragmented continuations + `permessage-deflate`, and render 2-way message transcripts.
+- [ ] **[FOCUS] [IDEA] `tshark` stream & TLS decryption backend (`SSLKEYLOGFILE` + `pcapng` `DSB`)** — Detect `tshark` on `PATH` (with fallback to native Rust reader) to ingest decrypted TLS 1.2/1.3, HTTP/1.x, HTTP/2, and QUIC streams without reinventing AEAD/HPACK/QUIC state machines.
+- [ ] **[FOCUS] [IDEA] Content-Length & chunked HTTP object carver (`gzip`/`deflate`/`br`/`zstd` + magic-byte fallback)** — Carve exact HTTP request/response bodies, decompress modern encodings, sniff magic headers (`png`, `jpeg`, `gif`, `webp`, `avif`, `pdf`, `zip`, `wasm`, `woff2`, `sqlite`, `parquet`), emit SHA-256 deduplicated files + `image.html` gallery, and generate sanitized `curl` reproducers.
+- [ ] **[FOCUS] [IDEA] SSE (`text/event-stream`) & NDJSON stream transcript reconstructor** — Reassemble streamed HTTP/1.1 & HTTP/2 responses (OpenAI/Anthropic/Gemini/Ollama/MCP event streams) into clean prompt/tool-call/completion transcripts with inter-event timing stats.
+- [ ] **[FOCUS] [IDEA] Safe asciinema v2 (`.cast`) replay compiler & inline HTML player** — Replace raw PTY-injecting Perl `.replay` scripts with `.cast` v2 recordings for interactive text sessions (Telnet, IRC, Redis, SMTP) playable safely inside `index.html`.
+- [ ] **[FOCUS] [IDEA] Queryable SQLite + FTS5 case manifest (`sessions.sqlite`)** — Emit a single-file SQLite database alongside `index.html` indexing flows, passive DNS/SNI names, HTTP requests, carved SHA-256 artifacts, and full-text searchable transcripts for humans and AI agents.
+- [ ] **[IDEA] WebSocket frame unmasker & bidirectional message timeline** — Detect `101 Switching Protocols` upgrades, unmask client->server frames, reassemble fragmented continuations + `permessage-deflate`, and render 2-way message transcripts.
+- [ ] **[IDEA] Passive hostname resolver (DNS `A`/`AAAA`/`CNAME` + mDNS + TLS `SNI`)** — Unroll CNAME chains from captured UDP/53 & mDNS 5353 packets plus plaintext TLS ClientHello `SNI` extensions to annotate IP endpoints across `index.html`, `sessions.jsonl`, and `sessions.sqlite`.
+- [ ] **[IDEA] Payload-first L7 protocol classifier (DPI over port numbers)** — Sniff initial stream bytes (`HTTP/1.`, HTTP/2 preface, TLS ClientHello, `SSH-`, Redis RESP, Postgres startup, MQTT `CONNECT`, WebSocket) for native-fallback flows instead of trusting `min(src_port, dst_port)`.
 
 ---
 
 ## Priority 2: High Impact, Medium Scope (60-90 min)
 
-- [ ] **[IDEA] `tshark` decryption bridge for TLS 1.3, HTTP/2 & QUIC (`SSLKEYLOGFILE` + `pcapng` `DSB`)** — Optional backend adapter invoking `tshark` when keylogs or embedded `pcapng` Decryption Secrets Blocks (`DSB`) are present, feeding decrypted HTTP/2 and QUIC streams into the L7 carvers.
 - [ ] **[IDEA] HTTP `206 Partial Content` byte-range stitcher & `multipart/form-data` extractor** — Reconstruct complete files from multi-connection or ranged `Content-Range: bytes start-end/total` transfers and carve uploaded files/fields out of `multipart/form-data` POSTs.
-- [ ] **[IDEA] Queryable SQLite session & artifact manifest (`sessions.sqlite`)** — Emit a structured SQLite database alongside `index.html` indexing flows, DNS/SNI names, HTTP transactions, carved SHA-256 objects, and transcript full-text search (FTS5).
-- [ ] **[IDEA] IPv4 & IPv6 fragment reassembly engine** — Reassemble fragmented IPv4 packets and IPv6 Fragment Extension Headers (`next_header = 44`) with proper per-`(src, dst, proto, id)` completion cleanup (fixing Chaosreader's `L1104` hash-path bug).
+- [ ] **[IDEA] Native fallback: overlap-trimmed TCP sequence reassembler & connection splitter** — Upgrade the zero-dependency Rust fallback path to handle out-of-order segments, partial-overlap retransmissions, 32-bit `seq` wraparound, and `SYN`/`FIN`/`RST` 4-tuple reuse when `tshark` is unavailable.
 - [ ] **[IDEA] Schema-less gRPC & Protobuf wire decoder** — Unpack length-prefixed gRPC frames (including compressed flags) and render schema-less Protobuf wire tags/varints/strings into structured JSON/HTML views.
+- [ ] **[IDEA] Native fallback: IPv4 & IPv6 fragment reassembly** — Reassemble fragmented IPv4 packets and IPv6 Fragment Extension Headers (`next_header = 44`) in pure-Rust mode.
 
 ---
 
