@@ -2,8 +2,11 @@
 
 Design notes and prototype workspace for a modern successor to Brendan Gregg's [Chaosreader](https://github.com/brendangregg/Chaosreader) (2003–2014)—preserving its core workflow (**one capture in → one static, browsable directory of reconstructed files, transcripts, and replays out**) while replacing its 2004-era L2–L7 assumptions for 2026 network traffic.
 
-## Documentation
+## Documentation & Workflow
 
+- **[Feature Backlog (`BACKLOG.md`)](BACKLOG.md)** — Prioritized single-iteration tasks (`the-iterate-bot` methodology).
+- **[Development & TDD Guide (`CLAUDE.md`)](CLAUDE.md)** — Strict `RED → GREEN → REFACTOR` TDD workflow, hypothesis-driven debugging discipline, and iteration scripts (`./scripts/next-iteration.sh`).
+- **[Strategic Review Checklist (`STRATEGIC-REVIEW-CHECKLIST.md`)](STRATEGIC-REVIEW-CHECKLIST.md)** — 8-iteration direction and health checkpoint.
 - **[Chaosreader in 2026: Source Review, Broken Assumptions & Redesign](docs/chaosreader-2026-review.md)** — Line-by-line review of the original 7,597-line Perl implementation:
   1. **The Goldmine of Tricks:** Dual-indexed TCP payload storage, self-executing `.replay` generators, live X11 resource-ID bitmask transposition & screen-scraping, fake-server VNC playback, stateless XDR/NFS carving, and passive DNS CNAME unrolling.
   2. **Assumptions That Break Now:** `pcapng` & nanosecond headers, microsecond-timestamp hash collisions on fast links/GRO, `SLL2`/`PKTAP`/overlay link layers, IPv6 formatting & fragment-tracking bugs, 4-tuple reuse & TCP overlap edge cases, port-based service guessing, OpenSSH 9.5+ keystroke chaffing, and XSS / terminal-escape footguns.

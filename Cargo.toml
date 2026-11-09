@@ -1,0 +1,18 @@
+[package]
+name = "chaosreader2026"
+version = "0.1.0"
+edition = "2024"
+description = "Modern packet-capture object carver, transcript reconstructor, and safe session-replay generator"
+license = "GPL-3.0-or-later"
+readme = "README.md"
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+etherparse = "0.17"
+pcap-file = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+
+[dev-dependencies]
+tempfile = "3.15"

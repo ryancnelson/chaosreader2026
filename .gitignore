@@ -52,8 +52,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.local.md
-CLAUDE.md
-AGENTS.md
 scratch/
 tmp/
 

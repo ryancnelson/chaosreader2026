@@ -40,7 +40,7 @@ if [[ -n "$files" ]]; then
                 [[ "$f" == ".env.example" ]] && continue
                 err "Key/secret/env file staged: $f"
                 ;;
-            *.local.md|CLAUDE.md|AGENTS.md)
+            *.local.md)
                 err "Local agent instruction file staged: $f"
                 ;;
         esac
