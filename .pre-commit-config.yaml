@@ -1,0 +1,12 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-public-safety
+        name: Check public-repo safety (no pcaps, keys, local paths, or internal hosts)
+        entry: scripts/check-public-safety.sh --all
+        language: system
+        pass_filenames: false
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.0
+    hooks:
+      - id: gitleaks
